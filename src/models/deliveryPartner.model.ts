@@ -27,8 +27,8 @@ const deliveryPartnerSchema = new Schema({
     }
   ],
   shift: {
-    start: Date,
-    end: Date
+      start: String,
+      end: String
   },
   metrics: {
     rating: {

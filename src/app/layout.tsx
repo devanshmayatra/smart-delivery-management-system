@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Toaster } from "sonner";
+import AppSidebar from "@/components/ui/AppSidebar";
 // import { Provider } from "react-redux";
 // import { store } from "./store/store";
 
@@ -29,9 +32,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* <Provider store={store}> */}
-          {children}
-        {/* </Provider> */}
+        <SidebarProvider >
+          <AppSidebar />
+          <main className="w-full">
+            <SidebarTrigger />
+            {children}
+          </main>
+          <Toaster richColors position="top-right" />
+        </SidebarProvider>
       </body>
     </html>
   );

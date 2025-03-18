@@ -1,9 +1,10 @@
 import { AssignmentMetrics } from "@/models/assignmentMetrics.model";
 import { connectDB } from "@/utils/db";
 import { NextResponse } from "next/server";
-import { initializeMetrics } from "../../functions/initializeMetrics";
+import { initializeMetrics } from "../../../../utils/initializeMetrics";
 
 connectDB();
+initializeMetrics();
 
 export async function GET() {
   try {

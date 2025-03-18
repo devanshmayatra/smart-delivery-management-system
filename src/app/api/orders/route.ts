@@ -1,9 +1,10 @@
 import { Order } from "@/models/order.model";
 import { connectDB } from "@/utils/db";
+import { initializeMetrics } from "@/utils/initializeMetrics";
 import { NextRequest, NextResponse } from "next/server";
 
-
 connectDB();
+initializeMetrics();
 
 export async function GET(req: NextRequest) {
   try {
@@ -12,6 +13,9 @@ export async function GET(req: NextRequest) {
       .populate({
         path: "assignedTo",
         select: "name email phone",
+      }).populate({
+        path: "area",
+        select: "name"
       });
     const response = {
       status: 200,

@@ -1,11 +1,13 @@
-import { initializeMetrics } from "@/app/api/functions/initializeMetrics";
+import { initializeMetrics } from "@/utils/initializeMetrics";
 import { Assignment } from "@/models/assignment.model";
 import { AssignmentMetrics } from "@/models/assignmentMetrics.model";
 import { Order } from "@/models/order.model";
 import { connectDB } from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
+import { DeliveryPartner } from "@/models/deliveryPartner.model";
 
 connectDB();
+await initializeMetrics();
 
 export async function PUT(req: NextRequest) {
   try {
@@ -24,7 +26,7 @@ export async function PUT(req: NextRequest) {
         $set: {
           status: 'success',
         }
-      });
+      }, { new: true });
       assignmentMetrics = await AssignmentMetrics.findByIdAndUpdate({ _id: "metrics" }, {
         $inc: {
           totalCompleted: 1,
@@ -37,6 +39,13 @@ export async function PUT(req: NextRequest) {
           successRate: successRate
         }
       }, { new: true });
+      const partner = await DeliveryPartner.findByIdAndUpdate({
+        _id: assignment.partnerId
+      }, {
+        $inc: {
+          currentLoad: -1
+        }
+      });
     }
 
     const order = await Order.findByIdAndUpdate({
@@ -48,6 +57,8 @@ export async function PUT(req: NextRequest) {
     }, {
       new: true
     });
+
+    console.log(order)
     const response = {
       status: 200,
       message: "Order status updated successfully",

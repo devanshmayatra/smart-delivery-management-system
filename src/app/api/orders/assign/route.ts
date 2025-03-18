@@ -3,10 +3,11 @@ import { DeliveryPartner } from "@/models/deliveryPartner.model";
 import { Order } from "@/models/order.model";
 import { connectDB } from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
-import { initializeMetrics } from "../../functions/initializeMetrics";
+import { initializeMetrics } from "../../../../utils/initializeMetrics";
 import { AssignmentMetrics } from "@/models/assignmentMetrics.model";
 
 connectDB();
+initializeMetrics();
 
 export async function POST(req: NextRequest) {
   try {
