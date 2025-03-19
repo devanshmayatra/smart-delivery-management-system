@@ -15,7 +15,7 @@ interface PartnerFormModalProps {
   onSubmit: (data: IDeliveryPartner) => void;
 }
 
-export const AddPartnerModal =({ partner, onSubmit }: PartnerFormModalProps) => {
+export const AddPartnerModal = ({ partner, onSubmit }: PartnerFormModalProps) => {
   const [areas, setAreas] = useState<{ id: string; name: string }[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [open, setOpen] = useState(false);
@@ -119,16 +119,25 @@ export const AddPartnerModal =({ partner, onSubmit }: PartnerFormModalProps) => 
                     name="areas"
                     render={({ field }) => (
                       <Select
-                        key={areaOptions.length} // Force re-render if areas change
+                        key={areaOptions.length}
                         {...field}
                         isMulti
                         options={areaOptions}
                         className="basic-multi-select"
                         classNamePrefix="select"
                         onChange={(selectedOptions) =>
-                          field.onChange(selectedOptions.map((option) => option.value))
+                          // Pass array of { _id, name } objects instead of IDs
+                          field.onChange(
+                            selectedOptions.map((option) => ({
+                              _id: option.value, // Assuming option.value is the _id
+                              name: option.label, // Assuming option.label is the name
+                            }))
+                          )
                         }
-                        value={areaOptions.filter((option) => field.value.includes(option.value))}
+                        value={areaOptions.filter((option) =>
+                          // Check if the option's value (id) exists in field.value's _id array
+                          field.value.some((item) => item._id === option.value)
+                        )}
                       />
                     )}
                   />
