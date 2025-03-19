@@ -39,7 +39,7 @@ export async function PUT(req: NextRequest) {
           successRate: successRate
         }
       }, { new: true });
-      const partner = await DeliveryPartner.findByIdAndUpdate({
+      await DeliveryPartner.findByIdAndUpdate({
         _id: assignment.partnerId
       }, {
         $inc: {

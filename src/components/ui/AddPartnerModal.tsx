@@ -3,13 +3,12 @@
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Select from "react-select";
 import { IDeliveryPartner } from "@/types/partner";
-import AddAreaModal from "./AddAreaModal";
 
 interface PartnerFormModalProps {
   partner: IDeliveryPartner | null;
@@ -39,7 +38,6 @@ export const AddPartnerModal =({ partner, onSubmit }: PartnerFormModalProps) => 
     handleSubmit,
     control,
     setValue,
-    formState: { errors },
     reset,
   } = useForm<IDeliveryPartner>({
     defaultValues: {
@@ -67,8 +65,8 @@ export const AddPartnerModal =({ partner, onSubmit }: PartnerFormModalProps) => 
 
   const handleFormSubmit = (data: IDeliveryPartner) => {
     onSubmit(data);
-    // reset();
-    setOpen(false); // Close modal
+    reset();
+    setOpen(false);
   };
 
   const areaOptions = areas.map((area) => ({

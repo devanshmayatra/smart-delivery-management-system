@@ -20,8 +20,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Trash2 } from "lucide-react";
-import { IOrder } from "@/types/order";
 import { toast } from "sonner";
+import { IOrder } from "@/types/order";
 
 interface Area {
   _id: string;
@@ -31,12 +31,12 @@ interface Area {
 export default function AddOrderModal({
   addOrder,
 }: {
-  addOrder: (newOrder : any) => void;
+  addOrder: (newOrder : IOrder) => void;
 }) {
   const [areas, setAreas] = useState<Area[]>([]);
   const [open , setOpen] = useState(false);
 
-  const [orderData, setOrderData] = useState({
+  const [orderData, setOrderData] = useState<IOrder>({
     orderNumber: "",
     customer: {
       name: "",
@@ -46,7 +46,7 @@ export default function AddOrderModal({
     area: "",
     items: [{ name: "", quantity: 1, price: 0 }],
     status: "pending",
-    scheduledFor: "12:00", // ✅ Default time format HH:mm
+    scheduledFor: "12:00",
     assignedTo: null,
     totalAmount: 0,
   });
@@ -65,7 +65,7 @@ export default function AddOrderModal({
     fetchAreas();
   }, []);
 
-  const updateOrderData = (field: string, value: any) => {
+  const updateOrderData = (field: string, value: string) => {
     setOrderData((prev) => ({
       ...prev,
       [field]: value,
@@ -128,7 +128,6 @@ export default function AddOrderModal({
       toast.warning("Please fill all required fields!");
       return;
     }
-    console.log(orderData)
     addOrder(orderData);
     setOpen(false);
   };

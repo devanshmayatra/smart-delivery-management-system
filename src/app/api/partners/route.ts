@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 connectDB();
 await initializeMetrics();
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const deliveryPartners = await DeliveryPartner.find().populate({
       path: "areas",

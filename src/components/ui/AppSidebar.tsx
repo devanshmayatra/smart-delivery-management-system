@@ -1,4 +1,4 @@
-import { ChartArea, Coins, History, Home, LayoutDashboard, LucideGift, Paperclip, User } from "lucide-react"
+import {LayoutDashboard, LucideGift, Paperclip, User } from "lucide-react"
 
 import {
   Sidebar,

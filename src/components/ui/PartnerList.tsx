@@ -19,6 +19,7 @@ export default function PartnersList() {
       .then((res) => res.json())
       .then((data) => setPartners(data.data))
       .catch((err) => toast.error("Error fetching partners:", err));
+      console.log(areas);
   }, [editingPartner]);
 
   const handleNewArea = (newArea: { id: string; name: string }) => {

@@ -13,7 +13,6 @@ await initializeMetrics();
 
 export async function POST() {
   try {
-    // Fetch required data
     const [allPartners, allOrders, allAreas, metrics] = await Promise.all([
       DeliveryPartner.find({ currentLoad: { $lt: 3 }, status: "active" }).sort({ name: 1 }),
       Order.find({ status: "pending" }).sort({ createdAt: 1 }),
@@ -21,23 +20,22 @@ export async function POST() {
       AssignmentMetrics.findOne(),
     ]);
 
+    console.log(allAreas);
+
     if (!metrics) throw new Error("Assignment Metrics not found!");
 
-    // Create a mapping of area -> available partners
     const areaPartnerMap: Record<string, IDeliveryPartner[]> = {};
     allPartners.forEach((partner) => {
       if (!areaPartnerMap[partner.area]) areaPartnerMap[partner.area] = [];
       areaPartnerMap[partner.area].push(partner);
     });
 
-    // Store assignments
     const assignments = [];
     const unassignedOrders = [];
 
     for (const order of allOrders) {
       let assigned = false;
 
-      // Check for available partners in the same area
       if (areaPartnerMap[order.area]) {
         const partnersInArea = areaPartnerMap[order.area].sort((a, b) => a.currentLoad - b.currentLoad);
         const partner = partnersInArea.find((p) => p.currentLoad < 3);
@@ -49,7 +47,6 @@ export async function POST() {
         }
       }
 
-      // If no partner in the same area, assign to any available partner
       if (!assigned) {
         const nearestPartner = allPartners.find((p) => p.currentLoad < 3);
         if (nearestPartner) {
@@ -61,7 +58,6 @@ export async function POST() {
       }
     }
 
-    // ✅ Store Assignments in DB
     await Promise.all(
       assignments.map(async ({ orderId, partnerId }) => {
         await Order.findByIdAndUpdate(orderId, { status: "assigned", assignedTo: partnerId });
@@ -70,7 +66,6 @@ export async function POST() {
       })
     );
 
-    // ✅ Update Assignment Metrics
     const newTotalAssigned = metrics.totalAssigned + assignments.length;
     const successRate = newTotalAssigned > 0 ? (metrics.totalCompleted / newTotalAssigned) * 100 : 0;
 

@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { Schema, model, models } from "mongoose";
 
 const assignmentMetricsSchema = new Schema({

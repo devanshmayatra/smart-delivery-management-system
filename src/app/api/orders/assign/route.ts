@@ -27,8 +27,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json('Partner not found', { status: 404, });
     }
 
-    //update order
-    const updatedOrder = await Order.findByIdAndUpdate({
+    await Order.findByIdAndUpdate({
       _id: orderID,
     }, {
       $set: {
@@ -37,8 +36,7 @@ export async function POST(req: NextRequest) {
       }
     }, { new: true });
 
-    //update partner
-    const updatedPartner = await DeliveryPartner.findByIdAndUpdate({
+    await DeliveryPartner.findByIdAndUpdate({
       _id: partnerID,
     }, {
       $inc: {
@@ -46,7 +44,6 @@ export async function POST(req: NextRequest) {
       }
     }, { new: true });
 
-    //create assignment
     const assignment = new Assignment({
       orderId: orderID,
       partnerId: partnerID,
@@ -64,7 +61,7 @@ export async function POST(req: NextRequest) {
 
     const successRate = (metrics.totalCompleted / metrics.totalAssigned) * 100;
 
-    const assignmentMetrics = await AssignmentMetrics.findByIdAndUpdate({ _id: "metrics" }, {
+  await AssignmentMetrics.findByIdAndUpdate({ _id: "metrics" }, {
       $set: {
         successRate: successRate
       }

@@ -27,7 +27,7 @@ export const AssignmentMetrics = () => {
         const data = await res.json();
         console.log(data)
         setMetrics(data.data);
-      } catch (err) {
+      } catch {
         setError("Error loading metrics.");
       } finally {
         setLoading(false);
@@ -44,7 +44,7 @@ export const AssignmentMetrics = () => {
       if (!res.ok) throw new Error("Failed to assign orders");
       setLoading(false);
       window.location.reload(); // Refresh data
-    } catch (err) {
+    } catch {
       setError("Error assigning orders.");
       setLoading(false);
     }

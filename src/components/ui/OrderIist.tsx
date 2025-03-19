@@ -22,7 +22,7 @@ export default function OrderList() {
         const res = await fetch("/api/orders");
         const data = await res.json();
         setOrders(data.data || []);
-      } catch (err) {
+      } catch {
         setError("Error loading orders. Please try again.");
       } finally {
         setLoading(false);
@@ -112,8 +112,7 @@ export default function OrderList() {
         return;
       }
   
-      // ✅ Update orders list after assignment
-      const updatedOrder = await response.json();
+      await response.json();
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
           order._id === orderID ? { ...order, assignedTo: partnerID } : order
@@ -181,7 +180,7 @@ export default function OrderList() {
                             <Button
                               key={partner._id}
                               className="w-full"
-                              onClick={() => handleAssignPartner(order._id, partner._id)}
+                              onClick={() => handleAssignPartner(order._id!, partner._id)}
                             >
                               {partner.name}
                             </Button>
@@ -199,7 +198,7 @@ export default function OrderList() {
                             <Button
                               key={status}
                               className="w-full"
-                              onClick={() => handleChangeStatus(order._id, status)}
+                              onClick={() => handleChangeStatus(order._id!, status)}
                             >
                               {status.charAt(0).toUpperCase() + status.slice(1)}
                             </Button>

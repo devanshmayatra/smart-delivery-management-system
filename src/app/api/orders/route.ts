@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 connectDB();
 initializeMetrics();
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const orders = await Order.find()
       .sort({ createdAt: -1 })

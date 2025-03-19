@@ -1,5 +1,5 @@
 export interface IOrder {
-  _id: string;
+  _id?: string;
   orderNumber: string;
   customer: {
     name: string;
@@ -16,6 +16,6 @@ export interface IOrder {
   scheduledFor: string; // HH:mm
   assignedTo?: string | null; // partner ID
   totalAmount: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  // updatedAt: Date;
 }
