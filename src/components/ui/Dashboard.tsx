@@ -31,7 +31,7 @@ export default function Dashboard() {
         setAssignments(assignmentsRes.data || []);
         console.log(assignmentsRes.data)
         setAreas(areasRes.data || []);
-      } catch (err) {
+      } catch{
         setError("Failed to load dashboard data.");
       } finally {
         setLoading(false);
