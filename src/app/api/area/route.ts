@@ -8,7 +8,7 @@ initializeMetrics();
 
 export async function GET() {
   try {
-    const areas = await Area.find();
+    const areas = await Area.find().sort({ name: 1 });
     const response = {
       status: 200,
       message: "Areas Fetched Succesfully",

@@ -1,3 +1,5 @@
+"use client"
+
 import OrderList from '@/components/ui/OrderIist'
 import React from 'react'
 

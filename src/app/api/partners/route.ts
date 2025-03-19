@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(response);
   } catch (error) {
     if (error instanceof Error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: error.message }, { status: 501 });
     } else {
       return NextResponse.json({ error: "An unknown error occurred" }, { status: 500 });
     }
@@ -32,7 +32,6 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    console.log(body)
     // const areas = await Area.find();
     const bodyAreas = body.areas;
     const areaIds = await Promise.all(

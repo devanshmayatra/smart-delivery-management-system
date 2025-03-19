@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Select from "react-select";
 import { IDeliveryPartner } from "@/types/partner";
+import AddAreaModal from "./AddAreaModal";
 
 interface PartnerFormModalProps {
   partner?: IDeliveryPartner;
@@ -31,7 +32,7 @@ export default function PartnerFormModal({ partner, onSubmit }: PartnerFormModal
         console.error("Error fetching areas:", err);
         setIsLoaded(true);
       });
-  }, []);
+  }, [open]);
 
   const {
     register,

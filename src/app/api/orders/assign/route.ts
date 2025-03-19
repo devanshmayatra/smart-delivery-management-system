@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
   try {
     initializeMetrics();
     const body = await req.json();
+    console.log(body)
     const { orderID, partnerID } = body;
     const order = await Order.findById({ _id: orderID });
     if (!order) {

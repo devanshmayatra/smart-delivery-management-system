@@ -14,7 +14,7 @@ export interface IOrder {
   }[];
   status: 'pending' | 'assigned' | 'picked' | 'delivered';
   scheduledFor: string; // HH:mm
-  assignedTo?: string; // partner ID
+  assignedTo?: string | null; // partner ID
   totalAmount: number;
   createdAt: Date;
   updatedAt: Date;

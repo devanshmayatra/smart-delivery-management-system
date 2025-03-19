@@ -47,7 +47,7 @@ const orderSchema = new Schema({
     enum: ['pending', 'assigned', 'picked', 'delivered', 'failed']
   },
   scheduledFor: {
-    type: Date,
+    type: String,
     required: true
   },
   assignedTo: {
