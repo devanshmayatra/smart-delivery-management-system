@@ -1,44 +1,45 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { IDeliveryPartner } from "@/types/partner";
-import { useRouter } from "next/navigation";
 import AddAreaModal from "./AddAreaModal";
-import PartnerForm from "./PartnerForm";
+import {AddPartnerModal} from "./AddPartnerModal";
+import { toast } from "sonner";
 
 export default function PartnersList() {
   const [partners, setPartners] = useState<IDeliveryPartner[]>([]);
   const [areas, setAreas] = useState<{ id: string; name: string }[]>([]);
-  const router = useRouter();
+  const [editingPartner, setEditingPartner] = useState<IDeliveryPartner | null>(null);
 
   useEffect(() => {
     fetch("/api/partners")
       .then((res) => res.json())
-      .then((data) => {
-        setPartners(data.data)
-        console.log(data.data)
-      })
-      .catch((err) => console.error("Error fetching partners:", err));
-  }, []);
+      .then((data) => setPartners(data.data))
+      .catch((err) => toast.error("Error fetching partners:", err));
+  }, [editingPartner]);
 
   const handleNewArea = (newArea: { id: string; name: string }) => {
     setAreas((prev) => [...prev, newArea]);
   };
 
   const handlePartnerSubmit = async (newPartner: IDeliveryPartner) => {
-    // Simulate API call
-    const response = await fetch("/api/partners", {
-      method: "POST",
+    const response = await fetch(editingPartner ? `/api/partners/${editingPartner!._id}` : "/api/partners", {
+      method: editingPartner ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newPartner),
     });
 
     if (response.ok) {
-      const addedPartner = await response.json();
-      setPartners((prev) => [...prev, addedPartner]); // Update UI
+      const updatedPartner = await response.json();
+      setPartners((prev) =>
+        editingPartner
+          ? prev.map((p) => (p._id === updatedPartner._id ? updatedPartner : p))
+          : [...prev, updatedPartner]
+      );
+      setEditingPartner(null);
     }
   };
 
@@ -47,8 +48,8 @@ export default function PartnersList() {
       <CardHeader className="flex justify-between">
         <CardTitle>Delivery Partners</CardTitle>
         <div className="flex gap-3">
-        <AddAreaModal onAreaAdded={handleNewArea} />
-        <PartnerForm onSubmit={handlePartnerSubmit} />
+          <AddAreaModal onAreaAdded={handleNewArea} />
+          <AddPartnerModal onSubmit={handlePartnerSubmit} partner={editingPartner || null} />
         </div>
       </CardHeader>
       <CardContent>
@@ -77,7 +78,7 @@ export default function PartnersList() {
                   </TableCell>
                   <TableCell>{partner.areas?.map((area) => area.name).join(", ") || "No areas assigned"}</TableCell>
                   <TableCell>
-                    <Button variant="outline" onClick={() => router.push(`/partners/edit/${partner._id}`)}>
+                    <Button variant="outline" onClick={() => setEditingPartner(partner)}>
                       Edit
                     </Button>
                   </TableCell>

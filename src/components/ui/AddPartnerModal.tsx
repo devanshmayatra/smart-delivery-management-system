@@ -12,11 +12,11 @@ import { IDeliveryPartner } from "@/types/partner";
 import AddAreaModal from "./AddAreaModal";
 
 interface PartnerFormModalProps {
-  partner?: IDeliveryPartner;
+  partner: IDeliveryPartner | null;
   onSubmit: (data: IDeliveryPartner) => void;
 }
 
-export default function PartnerFormModal({ partner, onSubmit }: PartnerFormModalProps) {
+export const AddPartnerModal =({ partner, onSubmit }: PartnerFormModalProps) => {
   const [areas, setAreas] = useState<{ id: string; name: string }[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [open, setOpen] = useState(false);

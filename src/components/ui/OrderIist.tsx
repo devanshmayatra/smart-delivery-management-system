@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { IOrder } from "@/types/order";
 import AddOrderModal from "./AddOrderModal";
+import { toast } from "sonner";
 
 export default function OrderList() {
   const [orders, setOrders] = useState<IOrder[]>([]);
@@ -45,34 +46,51 @@ export default function OrderList() {
     fetchPartners();
   }, []);
 
+  const handleChangeStatus = async (orderID: string, newStatus: string) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/orders/${orderID}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!response.ok) {
+        toast.warning("Failed to update status:");
+        return;
+      }
+
+        // setOrders((prevOrders) =>
+        //   prevOrders.map((order) =>
+        //     order._id === orderID ? { ...order, status: newStatus } : order
+        //   )
+        // );
+      setLoading(false);
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      setLoading(false);
+    }
+  };
+
   const handleOrderSubmit = async (newOrder: IOrder) => {
     try {
       setLoading(true);
-      // ✅ Remove null values if necessary
       const sanitizedOrder = { ...newOrder };
       if (sanitizedOrder.assignedTo === null) delete sanitizedOrder.assignedTo;
   
-      console.log("Submitting order:", sanitizedOrder);
-  
-      // ✅ Send API request
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(sanitizedOrder),
       });
   
-      // ✅ Error Handling
       if (!response.ok) {
-        console.error("Failed to add order:", await response.text());
+        toast.warning("Failed to add order:");
         return;
       }
   
       const addedOrder = await response.json();
-      console.log("Order added:", addedOrder);
-  
-      // ✅ Update UI (if setNewOrder exists)
-      // setNewOrder((prev) => [...prev, addedOrder]);
-
+      toast.success("Order added:", addedOrder);
 
       setLoading(false)
     } catch (error) {
@@ -166,6 +184,24 @@ export default function OrderList() {
                               onClick={() => handleAssignPartner(order._id, partner._id)}
                             >
                               {partner.name}
+                            </Button>
+                          ))}
+                        </PopoverContent>
+                      </Popover>
+                    </TableCell>
+                    <TableCell>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button size="sm">Change Status</Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="p-2 space-y-2">
+                          {["pending", "assigned", "picked", "delivered", "failed"].map((status) => (
+                            <Button
+                              key={status}
+                              className="w-full"
+                              onClick={() => handleChangeStatus(order._id, status)}
+                            >
+                              {status.charAt(0).toUpperCase() + status.slice(1)}
                             </Button>
                           ))}
                         </PopoverContent>
