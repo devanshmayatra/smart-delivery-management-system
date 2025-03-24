@@ -16,7 +16,7 @@ export default function AddAreaModal({ onAreaAdded }: AddAreaModalProps) {
     if (!newArea.trim()) return;
 
     // Simulate API call to add new area
-    const response = await fetch("/api/areas", {
+    const response = await fetch("/api/area", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: newArea }),

@@ -21,13 +21,12 @@ export async function PUT(req: NextRequest) {
       })
     );
 
-    // Remove null values (if any area wasn't found)
     const validAreaIds = areaIds.filter((id) => id !== null);
     body.areas = validAreaIds;
     const updatedPartner = await DeliveryPartner.findByIdAndUpdate(
       deliveryPartnerId,
-      { $set: body }, // Only update provided fields
-      { new: true } // Return updated document & apply schema validation
+      { $set: body },
+      { new: true }
     );
 
     if (!updatedPartner) {
