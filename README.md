@@ -101,7 +101,7 @@ Follow these instructions to set up and run the project locally.
 Run the development server:
 ```sh
 npm run dev
-
+```
 
 Open http://localhost:3000 in your browser to see the application running.
 
